@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>UrbanIQ Anmoldeep · Admin</title>
+<style>
+:root{--or:#ff5f00;--bg:#f6f3ec;--card:#fff;--ink:#1d1f1e;--mut:#7a7a72;--line:#e6e1d6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{display:flex;align-items:center;gap:14px;padding:12px 20px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header img{height:26px}header b{font-size:12px;letter-spacing:.2em;color:var(--mut)}header .sp{flex:1}
+main{max-width:1000px;margin:0 auto;padding:18px}nav{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+nav button{border:1px solid var(--line);background:#fff;padding:9px 16px;border-radius:99px;font:600 13px inherit;cursor:pointer}nav button.on{background:var(--or);color:#fff;border-color:var(--or)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+table{width:100%;border-collapse:collapse}th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);padding:6px}td{padding:6px;border-top:1px solid var(--line);vertical-align:middle}
+input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;max-width:100%}input[type=number]{width:130px}
+button.p,label.p{background:var(--or);color:#fff;border:0;padding:9px 16px;border-radius:9px;font:700 13px inherit;cursor:pointer;display:inline-block}button.g{background:#fff;border:1px solid var(--line);padding:7px 12px;border-radius:8px;cursor:pointer;font:inherit}button.d{background:#fff;border:1px solid #f0c4c4;color:#c0392b;padding:7px 12px;border-radius:8px;cursor:pointer}
+.st{padding:6px 10px;border-radius:8px;font-weight:700;border:2px solid transparent}.st.available{background:#e6f5ec;color:#1f7a45}.st.booked{background:#fdf3d8;color:#9a6b00}.st.sold{background:#fbe3e3;color:#b3261e}
+.ok{color:#1f7a45;font-size:12px;margin-left:8px;opacity:0;transition:opacity .3s}.ok.show{opacity:1}
+#login{max-width:340px;margin:12vh auto;text-align:center}#login input{width:100%;margin:10px 0}.err{color:#c0392b;min-height:20px}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}.gi{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}.gi img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block}.gi>div{padding:8px;display:flex;flex-direction:column;gap:6px}.gi .r{flex-direction:row;gap:4px}
+.hint{color:var(--mut);font-size:12px}.hide{display:none!important}.scroll{overflow-x:auto}
+@media(max-width:700px){
+main{padding:12px}header{padding:10px 12px;gap:8px}header b{display:none}
+input,select{font-size:16px;min-height:44px}button,label.p{min-height:44px}nav button{padding:11px 16px}.card{padding:12px}
+table,tbody,tr,td{display:block;width:100%}thead{display:none}
+tr{border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:10px}
+td{border:0;padding:4px 2px;display:flex;align-items:center;gap:10px;justify-content:space-between}
+td[data-l]:before{content:attr(data-l);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);flex:none;min-width:70px}
+td input,td select{flex:1;width:auto!important;max-width:none;min-width:0}
+.gal{grid-template-columns:repeat(2,1fr)}.gi .r button{min-width:44px}#login{margin:8vh auto;padding:20px}
+}
+</style></head><body>
+<div id="login" class="card"><img src="assets/wordmark.webp" style="height:30px" alt="UrbanIQ"><h3>Admin sign in</h3><input id="pw" type="password" placeholder="Admin password" autofocus><button class="p" id="go" style="width:100%">Sign in</button><div class="err" id="err"></div></div>
+<div id="app" class="hide">
+<header><img src="assets/wordmark.webp" alt="UrbanIQ"><b>ANMOLDEEP · ADMIN</b><span class="sp"></span><a href="index.html" target="_blank" class="hint">View site ↗</a><button class="g" id="out">Sign out</button></header>
+<main>
+<nav id="tabs"><button data-t="plots" class="on">Plots</button><button data-t="gallery">Gallery</button><button data-t="amen">Amenities</button><button data-t="set">Settings</button></nav>
+<section id="t-plots" class="card"><p class="hint" style="margin-top:0">Changes save instantly. Visitors see them on their next page load.</p><div class="scroll"><table><thead><tr><th>Plot</th><th>Size</th><th>Sq ft</th><th>Status</th><th>Price (₹)</th><th></th></tr></thead><tbody id="pt"></tbody></table></div></section>
+<section id="t-gallery" class="card hide"><p style="margin-top:0"><label class="p">+ Upload photos<input type="file" id="up" accept="image/*" multiple hidden></label> <span class="hint">Images are resized to 1600 px and compressed automatically.</span> <button class="g" id="gs">Save captions &amp; order</button><span class="ok" id="gok">Saved ✓</span></p><div class="gal" id="gl"></div></section>
+<section id="t-amen" class="card hide"><p style="margin-top:0"><select id="af"></select> <button class="g" id="aa">+ Add place</button> <button class="p" id="as">Save all</button><span class="ok" id="aok">Saved ✓</span></p><p class="hint">Get coordinates from Google Maps: right-click a spot, then click the numbers to copy (latitude, longitude). “Km” is the road distance shown to visitors.</p><div class="scroll"><table><thead><tr><th>Name</th><th>Category</th><th>Latitude</th><th>Longitude</th><th>Km</th><th></th></tr></thead><tbody id="at"></tbody></table></div></section>
+<section id="t-set" class="card hide"><h3 style="margin-top:0">WhatsApp number</h3><p class="hint">Used by “Book Site Visit” and “Enquire on WhatsApp”. Country code + number, digits only.</p><input id="wa" placeholder="919996661797"> <button class="p" id="ws">Save</button><span class="ok" id="wok">Saved ✓</span><h3>Admin password</h3><p class="hint">Set on the server with the <code>ADMIN_PASSWORD</code> environment variable (see README).</p></section>
+</main></div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');let TOK='';try{TOK=localStorage.getItem('uiq_t')||''}catch(e){}
+const CATS={roads:'Roads & Highways',transport:'Transport',shopping:'Shopping',fuel:'Fuel',hospital:'Hospitals',school:'Schools & Colleges',govt:'Government Services',power:'Power',lakes:'Lakes & Reservoirs',industry:'Industry & Jobs',banks:'Banks & ATMs',lifestyle:'Lifestyle'};
+let C=null,AM=[],GL=[];
+async function api(m,u,b){const r=await fetch(u,{method:m,headers:{'Content-Type':'application/json',Authorization:'Bearer '+TOK},body:b?JSON.stringify(b):undefined});const j=await r.json().catch(()=>({}));if(r.status===401&&u!=='api/login'){out();throw new Error('Session expired, please sign in again')}if(!r.ok)throw new Error(j.error||'Error '+r.status);return j}
+const flash=id=>{const e=$(id);e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)};
+async function login(){try{const j=await api('POST','api/login',{password:$('#pw').value});TOK=j.token;try{localStorage.setItem('uiq_t',TOK)}catch(e){}start()}catch(e){$('#err').textContent=e.message}}
+$('#go').onclick=login;$('#pw').onkeydown=e=>e.key==='Enter'&&login();
+function out(){TOK='';try{localStorage.removeItem('uiq_t')}catch(e){}$('#app').classList.add('hide');$('#login').classList.remove('hide')}$('#out').onclick=out;
+async function start(){try{C=await api('GET','api/admin/config')}catch(e){return}AM=C.amenities;GL=C.gallery;$('#login').classList.add('hide');$('#app').classList.remove('hide');drawPlots();drawGal();drawAm();$('#wa').value=C.whatsapp}
+$('#tabs').onclick=e=>{const t=e.target.dataset.t;if(!t)return;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b===e.target));['plots','gallery','amen','set'].forEach(k=>$('#t-'+k).classList.toggle('hide',k!==t))};
+function drawPlots(){$('#pt').innerHTML=Object.entries(C.plots).sort().map(([id,p])=>`<tr data-id="${id}"><td><b>${id}</b></td><td data-l="Size">${p.w}′ × ${p.h}′</td><td data-l="Sq ft">${p.sqft.toLocaleString('en-IN')}</td><td data-l="Status"><select class="st ${p.status}">${['available','booked','sold'].map(s=>`<option ${p.status===s?'selected':''}>${s}</option>`).join('')}</select></td><td data-l="Price (₹)"><input type="number" min="0" step="1000" value="${p.price||''}" placeholder="optional"></td><td><span class="ok">Saved ✓</span></td></tr>`).join('')}
+$('#pt').onchange=async e=>{const tr=e.target.closest('tr'),id=tr.dataset.id,s=tr.querySelector('select'),p=tr.querySelector('input');s.className='st '+s.value;
+ try{await api('PUT','api/plots/'+id,{status:s.value,price:p.value===''?null:p.value});const k=tr.querySelector('.ok');k.classList.add('show');setTimeout(()=>k.classList.remove('show'),1500)}catch(x){alert(x.message)}};
+function drawGal(){$('#gl').innerHTML=GL.map((g,i)=>`<div class="gi" data-i="${i}"><img src="uploads/gallery/${esc(g.file)}" alt=""><div><input value="${esc(g.caption)}" placeholder="Caption"><div class="r"><button class="g" data-a="up">↑</button><button class="g" data-a="dn">↓</button><button class="d" data-a="del" style="margin-left:auto">Delete</button></div></div></div>`).join('')||'<p class="hint">No photos yet.</p>'}
+function syncCap(){document.querySelectorAll('#gl .gi').forEach(d=>GL[+d.dataset.i].caption=d.querySelector('input').value)}
+$('#gl').onclick=async e=>{const a=e.target.dataset.a;if(!a)return;syncCap();const i=+e.target.closest('.gi').dataset.i;
+ if(a==='del'){if(!confirm('Delete this photo?'))return;try{await api('DELETE','api/gallery/'+GL[i].file);GL.splice(i,1)}catch(x){return alert(x.message)}}
+ if(a==='up'&&i>0)[GL[i-1],GL[i]]=[GL[i],GL[i-1]];if(a==='dn'&&i<GL.length-1)[GL[i+1],GL[i]]=[GL[i],GL[i+1]];drawGal()};
+$('#gs').onclick=async()=>{syncCap();try{await api('PUT','api/gallery',{items:GL});flash('#gok')}catch(x){alert(x.message)}};
+const shrink=f=>new Promise((ok,no)=>{const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const k=Math.min(1,1600/im.width),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok((d=>d.startsWith('data:image/webp')?d:c.toDataURL('image/jpeg',.82))(c.toDataURL('image/webp',.8)))};im.onerror=()=>no(new Error('Could not read '+f.name));im.src=u});
+$('#up').onchange=async e=>{syncCap();for(const f of e.target.files){try{const cap=f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' '),d=await shrink(f),j=await api('POST','api/gallery',{dataUrl:d,caption:cap});GL.push({file:j.file,caption:cap})}catch(x){alert(x.message)}}e.target.value='';drawGal()};
+$('#af').innerHTML='<option value="">All categories</option>'+Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');$('#af').onchange=drawAm;
+function drawAm(){const f=$('#af').value;$('#at').innerHTML=AM.map((a,i)=>[a,i]).filter(([a])=>!f||a.c===f).map(([a,i])=>`<tr data-i="${i}"><td data-l="Name"><input value="${esc(a.n)}" data-k="n" style="width:230px"></td><td data-l="Category"><select data-k="c">${Object.entries(CATS).map(([k,v])=>`<option value="${k}" ${a.c===k?'selected':''}>${v}</option>`).join('')}</select></td><td data-l="Latitude"><input type="number" step="any" value="${a.la}" data-k="la" style="width:120px"></td><td data-l="Longitude"><input type="number" step="any" value="${a.ln}" data-k="ln" style="width:120px"></td><td data-l="Km"><input type="number" step="any" value="${a.km}" data-k="km" style="width:80px"></td><td><button class="d" data-a="x">✕</button></td></tr>`).join('')}
+$('#at').oninput=$('#at').onchange=e=>{const k=e.target.dataset.k;if(!k)return;const a=AM[+e.target.closest('tr').dataset.i];a[k]=['la','ln','km'].includes(k)?+e.target.value:e.target.value;delete a.ap};
+$('#at').onclick=e=>{if(e.target.dataset.a==='x'&&confirm('Remove this place?')){AM.splice(+e.target.closest('tr').dataset.i,1);drawAm()}};
+$('#aa').onclick=()=>{AM.unshift({n:'New place',c:$('#af').value||'lifestyle',la:13.1007,ln:77.3754,km:0});drawAm()};
+$('#as').onclick=async()=>{try{const j=await api('PUT','api/amenities',{items:AM});$('#aok').textContent='Saved '+j.saved+' ✓';flash('#aok')}catch(x){alert(x.message)}};
+$('#ws').onclick=async()=>{try{const j=await api('PUT','api/settings',{whatsapp:$('#wa').value});$('#wa').value=j.whatsapp;flash('#wok')}catch(x){alert(x.message)}};
+if(TOK)start();
+</script></body></html>
